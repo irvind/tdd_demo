@@ -31,8 +31,34 @@ def test_return_empty_dict_if_result_is_empty(mocker):
         status_code=200,
         json=MagicMock(return_value=[])
     )
-    get_mock = mocker.patch(
+    mocker.patch(
         'tdd.external.requests.get',
         return_value=resp_mock
     )
     assert extract_data_from_external_api() == {}
+
+
+def test_return_correct_summ(mocker):
+    resp_mock = MagicMock(
+        status_code=200,
+        json=MagicMock(
+            return_value=[
+                {'name': 'Ivan', 'minutes': 10},
+                {'name': 'Sergey', 'minutes': 5},
+                {'name': 'Maxim', 'minutes': 7},
+                {'name': 'Ivan', 'minutes': 10},
+                {'name': 'Maxim', 'minutes': 3},
+                {'name': 'Ivan', 'minutes': 15},
+            ]
+        )
+    )
+    mocker.patch(
+        'tdd.external.requests.get',
+        return_value=resp_mock
+    )
+
+    assert extract_data_from_external_api() == {
+        'Ivan': 35,
+        'Sergey': 5,
+        'Maxim': 10
+    }
