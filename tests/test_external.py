@@ -9,7 +9,10 @@ def test_example():
 
 
 def test_api_method_called(mocker):
-    get_mock = mocker.patch('tdd.external.requests.get')
+    get_mock = mocker.patch(
+        'tdd.external.requests.get',
+        return_value=MagicMock(status_code=200)
+    )
     extract_data_from_external_api()
     get_mock.assert_called_with('http://example.com/api/v1/user_data')
 
