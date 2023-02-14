@@ -1,3 +1,4 @@
+from collections import defaultdict
 import requests
 
 
@@ -13,3 +14,9 @@ def extract_data_from_external_api():
     resp_json = resp.json()
     if resp_json == []:
         return {}
+
+    agg = defaultdict(lambda: 0)
+    for item in resp_json:
+        agg[item['name']] += item['minutes']
+
+    return agg
