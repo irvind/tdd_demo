@@ -24,3 +24,15 @@ def test_error_if_response_status_is_correct(mocker):
     )
     with pytest.raises(ExternalApiError):
         extract_data_from_external_api()
+
+
+def test_return_empty_dict_if_result_is_empty(mocker):
+    resp_mock = MagicMock(
+        status_code=200,
+        json=MagicMock(return_value=[])
+    )
+    get_mock = mocker.patch(
+        'tdd.external.requests.get',
+        return_value=resp_mock
+    )
+    assert extract_data_from_external_api() == {}
